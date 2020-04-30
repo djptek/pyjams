@@ -1,24 +1,26 @@
-band = ['horn', 'guitar', 'drums', 'bass']
+from interval import Head, Chorus, Interval
+from instrument import Instrument
 
-def play_hear(playing_now, play_buffer):
-    print 'PLAY {:<30} HEAR {:<30}'.format(playing_now, play_buffer)
-    return playing_now
+Heads = 2
+Choruses_per_instrument = 4
+intervals = []
+# add heads
+for head in range(Heads):
+    intervals.append(Head(head+1))
 
-heads = 2
-choruses_per_cat = 2
-intervals = heads+choruses_per_cat*len(band)+heads
-play_buffer = 'tacit'
+# add choruses for cats
+for instrument in list(Instrument):
+    for chorus in range(Choruses_per_instrument):
+        intervals.append(Chorus(instrument, chorus+1))
 
-for interval in range(intervals+1):
-    print '+++ Interval '+str(interval+1)+' +++'
-    if interval <= 1 or interval == intervals-1:
-        play_buffer = play_hear('all play head', play_buffer)
-    elif interval == intervals:
-        play_buffer = play_hear('tacit', play_buffer)
-    elif interval / choruses_per_cat <= len(band):
-        play_buffer = play_hear(
-            band[(interval/choruses_per_cat)-1] \
-            +' solo chorus '+str((interval % choruses_per_cat)+1) ,play_buffer)
-    else:
-        play_buffer = play_hear('all play head', play_buffer)
+# add closing head
+intervals.append(Head(1))
+# add closing tacit while buffer catches up
+intervals.append(Interval(1))
+
+print('{:<4} {:<40} || {:<4} {:<40}'.format(
+    'PLAY', intervals[0].__roles__(), 'HEAR', 'nothing, buffering...'))
+for i in range(1, intervals.__len__()):
+    print('{:<4} {:<40} || {:<4} {:<40}'.format(
+        'PLAY', intervals[i].__roles__(), 'HEAR', intervals[i-1].__roles__()))
 
