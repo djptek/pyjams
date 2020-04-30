@@ -6,4 +6,4 @@ class Role(Enum):
     SOLO = 1
     COMP = 2
     HEAD = 3
-    TACIT = 4
+    #TACIT = 4
