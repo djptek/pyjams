@@ -6,3 +6,4 @@ class Instrument(Enum):
     Guitar = auto()
     Drums = auto()
     Bass = auto()
+    Keys = auto()

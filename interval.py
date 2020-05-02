@@ -1,3 +1,4 @@
+import instrument
 from instrument import Instrument
 from role import Role
 
@@ -24,13 +25,17 @@ class Interval:
 
 
 class Head(Interval):
-    def __init__(self, repeat):
+    def __init__(self, repeat, band):
         super().__init__(repeat)
-        self.role_cats[Role.HEAD] = [e.name for i, e in enumerate(Instrument)]
+        self.role_cats[Role.HEAD] = [e for e in band]
 
 
 class Chorus(Interval):
-    def __init__(self, soloist, repeat):
+    def __init__(self, soloist, instrument, repeat, rest_of_band):
         super().__init__(repeat)
-        self.role_cats[Role.SOLO] = [soloist.name]
-        self.role_cats[Role.COMP] = [e.name for i, e in enumerate(Instrument) if e!=soloist]
+        self.role_cats[Role.SOLO] = [soloist]
+        if instrument != Instrument.Drums:
+            self.role_cats[Role.COMP] = [
+                e for e in rest_of_band \
+                if (rest_of_band[e] in [Instrument.Drums]) or (
+                        instrument not in [Instrument.Drums, Instrument.Bass])]

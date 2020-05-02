@@ -3,10 +3,11 @@ from instrument import Instrument
 
 
 class Arrangement:
-    def __init__(self, title, heads, choruses):
+    def __init__(self, title, heads, choruses, band):
         self.title = title
         self.heads = heads
         self.choruses = choruses
+        self.band = band
         self.intervals = []
 
     def __generate__(self):
@@ -14,17 +15,20 @@ class Arrangement:
         # add heads
         print('Play {} x Head,'.format(self.heads))
         for head in range(self.heads):
-            self.intervals.append(Head(head + 1))
+            self.intervals.append(Head(head + 1, self.band))
 
         # add choruses for cats
-        for instrument in list(Instrument):
-            print('{} {} x Chorus,'.format(instrument.name, self.choruses))
+        for cat in self.band:
+            print('{} {} x Chorus,'.format(cat, self.choruses))
             for chorus in range(self.choruses):
-                self.intervals.append(Chorus(instrument, chorus + 1))
+                self.intervals.append(Chorus(
+                    cat, self.band[cat], \
+                    chorus + 1, \
+                    {e:self.band[e] for e in self.band if e != cat}))
 
         # add closing head
         print('Play 1 x Head\n'.format(self.heads))
-        self.intervals.append(Head(1))
+        self.intervals.append(Head(1, self.band))
         # add closing tacit while buffer catches up
         self.intervals.append(Interval(1))
 
